@@ -3,9 +3,7 @@ import pino from "pino-http";
 import cors from "cors";
 import { getAllContacts, getContactById } from "./services/contacts.js";
 
-import { getEnvVar } from "./utils/getEnvVar.js";
-
-const PORT = Number(getEnvVar("PORT", "3000"));
+const PORT = process.env.PORT || 3000;
 
 export const setupServer = () => {
   const app = express();
@@ -14,8 +12,8 @@ export const setupServer = () => {
   app.use(cors());
   app.get("/contacts", async (req, res) => {
     const contacts = await getAllContacts();
-
     res.status(200).json({
+      message: "Mongo connection successfully established!",
       data: contacts,
     });
   });
@@ -30,7 +28,8 @@ export const setupServer = () => {
       });
       return;
     }
-    res.status(200).json({
+    res.send({
+      status: 200,
       message: `Successfully found contact with id ${contactId}!`,
       data: contact,
     });
