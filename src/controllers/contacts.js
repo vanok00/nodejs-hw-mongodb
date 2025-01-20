@@ -36,29 +36,23 @@ export const getContactByIdController = async (req, res) => {
   });
 };
 
-export const createContactController = async (req, res) => {
-  try {
-    const contact = await createContact({
-      name: req.body.name,
-      phoneNumber: req.body.phoneNumber,
-      email: req.body.email,
-      isFavourite: req.body.isFavourite,
-      contactType: req.body.contactType,
-    });
+export async function createContactController(req, res) {
+  const contact = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    isFavourite: req.body.isFavourite,
+    contactType: req.body.contactType,
+  };
 
-    res.status(201).json({
-      status: 201,
-      message: "Successfully created a contact!",
-      data: contact,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 500,
-      message: "Failed to create a contact",
-      error: error.message,
-    });
-  }
-};
+  const newContact = await createContact(contact);
+
+  res.status(201).json({
+    status: 201,
+    message: "Successfully created a contact!",
+    data: newContact,
+  });
+}
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
@@ -73,11 +67,20 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-export const patchContactController = async (req, res, next) => {
+export async function patchContactController(req, res, next) {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body);
 
-  if (!result) {
+  const contact = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    isFavourite: req.body.isFavourite,
+    contactType: req.body.contactType,
+  };
+
+  const updatedContact = await updateContact(contactId, contact);
+
+  if (!updatedContact) {
     next(createHttpError(404, "Contact not found"));
     return;
   }
@@ -85,6 +88,6 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: "Successfully patched a student",
-    data: result.contact,
+    data: updatedContact,
   });
-};
+}

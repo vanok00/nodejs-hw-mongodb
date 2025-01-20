@@ -22,29 +22,10 @@ export const deleteContact = async (contactId) => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, options = {}) => {
-  payload = {
-    name: "John Doe",
-    email: "jojndoe@mail.com",
-    age: 18,
-    gender: "male",
-    avgMark: 10.3,
-    onDuty: true,
-  };
-  const rawResult = await ContactsCollection.findByIdAndUpdate(
-    { _id: contactId },
-    payload,
-    {
-      new: true,
-      includeResultMetadata: true,
-      ...options,
-    }
+export const updateContact = async (contactId, contact) => {
+  const newContact = await ContactsCollection.findByIdAndUpdate(
+    contactId,
+    contact
   );
-
-  if (!rawResult || !rawResult.value) return null;
-
-  return {
-    student: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
-  };
+  return newContact;
 };
