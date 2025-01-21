@@ -36,23 +36,15 @@ export const getContactByIdController = async (req, res) => {
   });
 };
 
-export async function createContactController(req, res) {
-  const contact = {
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    isFavourite: req.body.isFavourite,
-    contactType: req.body.contactType,
-  };
-
-  const newContact = await createContact(contact);
+export const createContactController = async (req, res) => {
+  const contact = await createContact(req.body);
 
   res.status(201).json({
     status: 201,
     message: "Successfully created a contact!",
-    data: newContact,
+    data: contact,
   });
-}
+};
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
@@ -67,27 +59,41 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-export async function patchContactController(req, res, next) {
+// export async function patchContactController(req, res, next) {
+//   const { contactId } = req.params;
+
+//   const contact = {
+//     name: req.body.name,
+//     phoneNumber: req.body.phoneNumber,
+//     email: req.body.email,
+//     isFavourite: req.body.isFavourite,
+//     contactType: req.body.contactType,
+//   };
+export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
+  const result = await updateContact(contactId, req.body);
 
-  const contact = {
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    isFavourite: req.body.isFavourite,
-    contactType: req.body.contactType,
-  };
-
-  const updatedContact = await updateContact(contactId, contact);
-
-  if (!updatedContact) {
+  if (!result) {
     next(createHttpError(404, "Contact not found"));
     return;
   }
 
   res.json({
     status: 200,
-    message: "Successfully patched a student",
-    data: updatedContact,
+    message: "Successfully patched a contact!",
+    data: result.contact,
   });
-}
+};
+
+// const updatedContact = await updateContact(contactId, contact);
+
+//   if (!updatedContact) {
+//     next(createHttpError(404, "Contact not found"));
+//     return;
+//   }
+
+//   res.json({
+//     status: 200,
+//     message: "Successfully patched a student",
+//     data: updatedContact,
+//   });
