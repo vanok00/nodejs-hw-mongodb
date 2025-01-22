@@ -59,16 +59,6 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-// export async function patchContactController(req, res, next) {
-//   const { contactId } = req.params;
-
-//   const contact = {
-//     name: req.body.name,
-//     phoneNumber: req.body.phoneNumber,
-//     email: req.body.email,
-//     isFavourite: req.body.isFavourite,
-//     contactType: req.body.contactType,
-//   };
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
@@ -84,16 +74,3 @@ export const patchContactController = async (req, res, next) => {
     data: result.contact,
   });
 };
-
-// const updatedContact = await updateContact(contactId, contact);
-
-//   if (!updatedContact) {
-//     next(createHttpError(404, "Contact not found"));
-//     return;
-//   }
-
-//   res.json({
-//     status: 200,
-//     message: "Successfully patched a student",
-//     data: updatedContact,
-//   });
