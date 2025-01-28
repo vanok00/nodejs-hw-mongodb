@@ -6,19 +6,20 @@ import {
   updateContact,
 } from "../services/contacts.js";
 import createHttpError from "http-errors";
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 
-export const getContactsController = async (req, res, next) => {
-  try {
-    const contacts = await getAllContacts();
+export const getContactsController = async (req, res) => {
+  const { page, perPage } = parsePaginationParams(req.query);
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+  });
 
-    res.json({
-      status: 200,
-      message: "Mongo connection successfully established!",
-      data: contacts,
-    });
-  } catch (err) {
-    next(err);
-  }
+  res.json({
+    status: 200,
+    message: "Mongo connection successfully established!",
+    data: contacts,
+  });
 };
 
 export const getContactByIdController = async (req, res) => {
