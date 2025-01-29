@@ -6,19 +6,32 @@ import {
   updateContact,
 } from "../services/contacts.js";
 import createHttpError from "http-errors";
+import {
+  parsePaginationParams,
+  parseSortParams,
+} from "../utils/parsePaginationParams.js";
+import { parseFilterParams } from "../utils/parseFilterParams.js";
 
-export const getContactsController = async (req, res, next) => {
-  try {
-    const contacts = await getAllContacts();
+export const getContactsController = async (req, res) => {
+  const { page, perPage } = parsePaginationParams(req.query);
 
-    res.json({
-      status: 200,
-      message: "Mongo connection successfully established!",
-      data: contacts,
-    });
-  } catch (err) {
-    next(err);
-  }
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+
+  const filter = parseFilterParams(req.query);
+
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
+  res.json({
+    status: 200,
+    message: "Mongo connection successfully established!",
+    data: contacts,
+  });
 };
 
 export const getContactByIdController = async (req, res) => {
@@ -59,16 +72,6 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-// export async function patchContactController(req, res, next) {
-//   const { contactId } = req.params;
-
-//   const contact = {
-//     name: req.body.name,
-//     phoneNumber: req.body.phoneNumber,
-//     email: req.body.email,
-//     isFavourite: req.body.isFavourite,
-//     contactType: req.body.contactType,
-//   };
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
@@ -84,16 +87,3 @@ export const patchContactController = async (req, res, next) => {
     data: result.contact,
   });
 };
-
-// const updatedContact = await updateContact(contactId, contact);
-
-//   if (!updatedContact) {
-//     next(createHttpError(404, "Contact not found"));
-//     return;
-//   }
-
-//   res.json({
-//     status: 200,
-//     message: "Successfully patched a student",
-//     data: updatedContact,
-//   });
