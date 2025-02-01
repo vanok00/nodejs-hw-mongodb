@@ -4,8 +4,9 @@ import cors from "cors";
 import router from "./routers/index.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import cookieParser from "cookie-parser";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 export const setupServer = () => {
   const app = express();
@@ -36,4 +37,12 @@ export const setupServer = () => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
+};
+
+export const startServer = () => {
+  const app = express();
+
+  app.use(express.json());
+  app.use(cors());
+  app.use(cookieParser());
 };

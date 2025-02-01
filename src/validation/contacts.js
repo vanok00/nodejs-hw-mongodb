@@ -32,14 +32,6 @@ export const createContactSchema = Joi.object({
 
 const dataToValidate = {};
 
-// const dataToValidate = {
-//   name: "John Doe",
-//   phoneNumber: "23131313",
-//   email: "john.doe@example.com",
-//   isFavourite: false,
-//   contactType: "work",
-// };
-
 const validationResult = createContactSchema.validate(dataToValidate);
 if (validationResult.error) {
   console.error(validationResult.error.message);
