@@ -6,10 +6,22 @@ import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import cookieParser from "cookie-parser";
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
+export const startServer = () => {
+  const app = express();
+
+  app.use(express.json());
+  app.use(cookieParser());
+  app.use(
+    cors({
+      credentials: true,
+    })
+  );
+};
 
 export const setupServer = () => {
   const app = express();
+  app.use(cookieParser());
 
   app.use(express.json());
   app.use(cors());
@@ -37,12 +49,4 @@ export const setupServer = () => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
-};
-
-export const startServer = () => {
-  const app = express();
-
-  app.use(express.json());
-  app.use(cors());
-  app.use(cookieParser());
 };
