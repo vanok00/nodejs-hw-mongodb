@@ -8,11 +8,13 @@ import {
 
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
+  const userObj = user.toObject();
+  const { password, ...userWithoutPassword } = userObj;
 
   res.status(201).json({
     status: 201,
     message: "Succesfully registered a user!",
-    data: user,
+    data: userWithoutPassword,
   });
 };
 
