@@ -20,13 +20,12 @@ export const createContactSchema = Joi.object({
   contactType: Joi.string()
     .min(3)
     .max(20)
-    .required()
     .messages({
       "any.only": "Contact type must be one of work, home, or personal",
       "any.required": "Contact type is required",
     })
     .valid("work", "home", "personal"),
-  isFavourite: Joi.boolean().required().messages({
+  isFavourite: Joi.boolean().messages({
     "any.required": "isFavourite is required",
   }),
   userId: Joi.string().custom((value, helper) => {
