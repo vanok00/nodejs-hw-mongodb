@@ -1,15 +1,27 @@
 import express from "express";
 import pino from "pino-http";
 import cors from "cors";
-
-import contactsRouter from "./routers/contacts.js";
+import router from "./routers/index.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import cookieParser from "cookie-parser";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
+export const startServer = () => {
+  const app = express();
+
+  app.use(express.json());
+  app.use(cookieParser());
+  app.use(
+    cors({
+      credentials: true,
+    })
+  );
+};
 
 export const setupServer = () => {
   const app = express();
+  app.use(cookieParser());
 
   app.use(express.json());
   app.use(cors());
@@ -28,7 +40,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use(contactsRouter);
+  app.use(router);
 
   app.use("*", notFoundHandler);
 
