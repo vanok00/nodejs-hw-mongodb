@@ -1,14 +1,18 @@
-import mongoose from "mongoose";
+import { model, Schema } from "mongoose";
 
-const { model, Schema, models } = mongoose;
-
-const userSchema = new Schema(
+const usersSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, unique: true, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
   },
   { timestamps: true, versionKey: false }
 );
 
-export const UsersCollection = models.users || model("users", userSchema);
+usersSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
+export const UsersCollection = model("users", usersSchema);
