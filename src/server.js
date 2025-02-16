@@ -5,8 +5,11 @@ import router from "./routers/index.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import cookieParser from "cookie-parser";
+import { getEnvVar } from "./utils/getEnvVar.js";
 
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
+const PORT = Number(getEnvVar("PORT", "3001"));
+
 export const startServer = () => {
   const app = express();
 
