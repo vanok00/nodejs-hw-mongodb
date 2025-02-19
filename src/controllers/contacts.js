@@ -10,6 +10,8 @@ import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
 import { parseFilterParams } from "../utils/parseFilterParams.js";
 import { saveFileToUploadDir } from "../utils/saveFileToUploadDir.js";
+import { getEnvVar } from "../utils/getEnvVar.js";
+import { saveFileToCloudinary } from "../utils/saveFileToCloudinary.js";
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -58,24 +60,6 @@ export const createContactController = async (req, res) => {
   });
 };
 
-// export const patchContactController = async (req, res, next) => {
-//   const id = req.params.contactId;
-//   const userId = req.user._id;
-//   const contact = await updateContact(id, req.body, userId);
-//   const photo = req.file;
-
-//   let photoUrl;
-//   if (!contact) {
-//     throw createHttpError(404, "Contact not found");
-//   }
-
-//   res.status(200).json({
-//     status: 200,
-//     message: `Successfully patched a contact`,
-//     data: contact,
-//   });
-// };
-
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user._id;
@@ -84,12 +68,20 @@ export const patchContactController = async (req, res, next) => {
   let photoUrl;
 
   if (photo) {
-    photoUrl = await saveFileToUploadDir(photo);
+    if (getEnvVar("ENABLE_CLOUDINARY") === "true") {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
   }
 
-  const result = await updateContact(contactId, userId, {
-    photo: photoUrl,
-  });
+  const result = await updateContact(
+    contactId,
+    {
+      photo: photoUrl,
+    },
+    userId
+  );
 
   if (!result) {
     next(createHttpError(404, "Contact not found"));
@@ -99,7 +91,7 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: result.contact,
+    data: result,
   });
 };
 
