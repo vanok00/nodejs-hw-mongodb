@@ -70,36 +70,10 @@ export const deleteContact = async (userId, contactId) => {
   return contact;
 };
 
-export const updateContact = async (
-  userId,
-  contactId,
-  payload,
-  options = {}
-) => {
-  // const rawResult = await ContactsCollection.findOneAndUpdate(
-  //   userId,
-  //   { _id: contactId },
-  //   payload,
-  //   {
-  //     new: true,
-  //     includeResultMetadata: true,
-  //     ...options,
-  //   }
-  // );
-  const rawResult = await ContactsCollection.findOneAndUpdate(
-    userId,
-    { _id: contactId },
-    {
-      new: true,
-      includeResultMetadata: true,
-      ...options,
-    }
+export const updateContact = async (id, payload, userId) => {
+  return await ContactsCollection.findOneAndUpdate(
+    { _id: id, userId },
+    payload,
+    { new: true }
   );
-
-  if (!rawResult || !rawResult.value) return null;
-
-  return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
-  };
 };
