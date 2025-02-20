@@ -47,11 +47,47 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 
+// export const createContactController = async (req, res) => {
+//   const body = {
+//     ...req.body,
+//     userId: req.user._id,
+//   };
+//   const photo = req.file;
+//   let photoUrl;
+
+//   if (photo) {
+//     if (getEnvVar("ENABLE_CLOUDINARY") === "true") {
+//       photoUrl = await saveFileToCloudinary(photo);
+//     } else {
+//       photoUrl = await saveFileToUploadDir(photo);
+//     }
+//   }
+//   const contact = await createContact(body);
+//   res.status(201).json({
+//     status: 201,
+//     message: "Successfully created a contact!",
+//     data: contact,
+//   });
+// };
+
 export const createContactController = async (req, res) => {
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    if (getEnvVar("ENABLE_CLOUDINARY") === "true") {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
   const body = {
     ...req.body,
     userId: req.user._id,
+    photo: photoUrl,
   };
+
   const contact = await createContact(body);
   res.status(201).json({
     status: 201,
