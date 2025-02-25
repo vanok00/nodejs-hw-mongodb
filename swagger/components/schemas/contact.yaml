@@ -1,0 +1,36 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+  - userId
+properties:
+  _id:
+    description: "Contact's id"
+    type: string
+    example: 65e4decdd286b30065d54af9
+  phoneNumber:
+    description: "Contact's phone number"
+    type: string
+    example: "380994312555"
+  email:
+    description: "Contact's email"
+    type: string
+    example: sisis@example.com
+  isFavourite:
+    description: "Is favorite contact "
+    type: boolean
+    example: true
+  contactType:
+    description: "Type of contact"
+    type: string
+    enum: ["work", "home", "personal"]
+  userId:
+    description: "Contact owner id"
+    type: string
+    example: 67a27707a7ef64d92674766c
+  photo:
+    description: "Link to contact's photo"
+    type: string
+    example: https://res-console.cloudinary.com/dikjtales/thumbnails/v1/image/upload/v1738702049/cXBma2F6cHZ4NmFvbXdiYmo4cXM=/drilldown
