@@ -1,10 +1,9 @@
-import { LoginTicket, OAuth2Client } from "google-auth-library";
+import { OAuth2Client } from "google-auth-library";
 import path from "node:path";
 import { readFile } from "fs/promises";
 
 import { getEnvVar } from "./getEnvVar.js";
 import createHttpError from "http-errors";
-import { strict } from "node:assert";
 
 const PATH_JSON = path.join(process.cwd(), "google-oauth.json");
 
